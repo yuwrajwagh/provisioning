@@ -1,0 +1,25 @@
+---
+# tasks file for CREATEEC2
+- name : "Read env variable files"
+  include_vars :
+    file : "vars/{{ PROJECT }}_{{ ENV }}.yaml"
+
+- name : "Read project variable files"
+  include_vars :
+    file : "vars/{{ PROJECT }}.yaml"
+- ec2:
+    region: "{{ REGION }}"
+    key_name: "{{ KEYNAME }}"
+    instance_type: t2.micro
+    image: "{{ AMI }}"
+    wait: yes
+    count : "{{ COUNT }}"
+    vpc_subnet_id: "{{ SUBNETID }}"
+    assign_public_ip: yes
+    group : 
+     - "{{ SGNAME }}"
+    instance_tags :
+       Name : "Webserver"
+       Project : "{{ PROJECT }}"
+       Env : "{{ ENV }}"
+       Managedby : "Ansible"
